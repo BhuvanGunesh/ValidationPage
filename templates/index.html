@@ -1,0 +1,129 @@
+<p>Hello from file</p>
+
+
+
+  <form method="POST" enctype = "multipart/form-data">
+
+    <table  id="table" class="tbl" style="width:100%;border:1px solid black;">
+
+        <thead>
+        <tr>
+          <th>Suggestion1</th>
+          <th>Suggestion2</th>
+          <th>Suggestion3</th>
+          <th>Ref Search</th>    
+          <th>Selected Model</th>
+      
+        </tr>
+
+    </thead>
+
+
+
+    <tbody>
+        {% for key, value in result_json.items() %}
+        <tr>
+          
+          <td class="table-cell">{{ value['Suggestion1'] }}</td>
+          <td class="table-cell">{{ value['Suggestion2'] }}</td>
+          <td class="table-cell">{{ value['Suggestion3'] }}</td>
+          <td><input class="table-dropdown" list="browsers" name="browser" id="browser"></td>
+          <td contenteditable="true">{{ value['Selected_model'] }}</td>
+          
+          
+          
+        </tr>
+        {% endfor %}
+        
+      </tbody>
+
+
+      </table>
+
+      <input  type = "file" name = "file" />
+                  
+      <button   type="submit" name="submit_button" value="Import">Import Data</button>
+      
+      <button type="submit" name="submit_button" value="Save" onclick='myfunction();'>Save</button>
+
+      <button   type="submit" name="submit_button" value="Export">Export</button>
+
+      
+   
+  </form>
+
+
+
+
+  
+
+<datalist id="browsers">
+  <option value="Edge">
+  <option value="Firefox">
+  <option value="Chrome">
+  <option value="Opera">
+  <option value="Safari">
+</datalist>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+  <script>
+
+document.querySelectorAll(".table-cell").forEach(function(elm){
+    elm.addEventListener("click", function(e){
+        var children = e.target.parentElement.children;
+        for(var i=0; i<children.length; i++) {
+            children[i].style.background = 'white';
+}
+    e.target.style.backgroundColor = 'green'; 
+    var copyText = e.target.textContent; 
+    
+    var dest_element = e.target.parentElement.lastElementChild
+    
+    
+    dest_element.innerHTML = copyText;
+  
+  
+});
+
+})
+
+document.querySelectorAll(".table-dropdown").forEach(function(elm){
+    elm.addEventListener("click", function(e){
+        
+    
+    var copyText = e.target.value;
+    console.log(copyText)
+    var dest_element = e.target.parentElement.parentElement.lastElementChild
+    
+    
+    dest_element.innerHTML = copyText;
+  
+  
+});
+
+})
+
+  </script>
+
+  
+
+<script>
+    function myfunction() {
+
+        
+        let t = document.getElementById("table").outerHTML;
+        var result = String(t)
+        const dict_values = {result} //Pass the javascript variables to a dictionary.
+        const s = JSON.stringify(dict_values); // Stringify converts a JavaScript object or value to a JSON string
+        console.log(s); // Prints the variables to console window, which are in the JSON format
+        //window.alert(s)
+        $.ajax({
+            url:"/test",
+            type:"POST",
+            contentType: "application/json",
+            data: JSON.stringify(s)});
+
+}
+
+  </script>
